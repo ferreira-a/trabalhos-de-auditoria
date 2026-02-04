@@ -9,7 +9,7 @@ import time
 import random
 
 
-def GEN(seed):
+def GEN(seed: list[int]) -> list[int]:
     """Gera chave binária de tamanho 4 * len(seed)"""
     tamanho_chave = 4 * len(seed)
     
@@ -60,6 +60,7 @@ def DEC(key, cifra):
     # Passo 2: XOR com chave para recuperar a mensagem original
     M = [key[i] ^ result[i] for i in range(n)]
     return M
+
 
 
 
