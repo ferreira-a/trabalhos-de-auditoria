@@ -11,17 +11,35 @@ import random
 
 def GEN(seed: list[int]) -> list[int]:
     """Gera chave binária de tamanho 4 * len(seed)"""
+    if not all(isinstance(bit, int) for bit in seed):
+        raise ValueError("A seed deve ser uma lista de inteiros")
+    if not all(bit in (0, 1) for bit in seed):
+        raise ValueError("A seed deve conter apenas 0 e 1")
+
     tamanho_chave = 4 * len(seed)
-    
-    # hash SHA-256 da seed 
-    hash_bytes = hashlib.sha256(seed.encode()).digest()
+
+    # Converte lista de bits em bytes para gerar o hash
+    byte_val = 0
+    packed_bytes = bytearray()
+    for i, bit in enumerate(seed):
+        byte_val = (byte_val << 1) | bit
+        if (i + 1) % 8 == 0:
+            packed_bytes.append(byte_val)
+            byte_val = 0
+    if len(seed) % 8 != 0:
+        remaining = 8 - (len(seed) % 8)
+        packed_bytes.append(byte_val << remaining)
+
+    hash_bytes = hashlib.sha256(bytes(packed_bytes)).digest()
 
     
     # Converte bytes para bits
     chave = []
     for byte in hash_bytes:
+        #print(f"byte: {byte}")
         for i in range(8):
             chave.append((byte >> (7 - i)) & 1)
+            #print(f"  bit: {(byte >> (7 - i)) & 1}")
             if len(chave) == tamanho_chave:
                 return chave
     
@@ -60,6 +78,7 @@ def DEC(key, cifra):
     # Passo 2: XOR com chave para recuperar a mensagem original
     M = [key[i] ^ result[i] for i in range(n)]
     return M
+
 
 
 
