@@ -36,10 +36,8 @@ def GEN(seed: list[int]) -> list[int]:
     # Converte bytes para bits
     chave = []
     for byte in hash_bytes:
-        #print(f"byte: {byte}")
         for i in range(8):
             chave.append((byte >> (7 - i)) & 1)
-            #print(f"  bit: {(byte >> (7 - i)) & 1}")
             if len(chave) == tamanho_chave:
                 return chave
     
@@ -78,6 +76,7 @@ def DEC(key, cifra):
     # Passo 2: XOR com chave para recuperar a mensagem original
     M = [key[i] ^ result[i] for i in range(n)]
     return M
+
 
 
 
